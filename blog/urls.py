@@ -10,6 +10,7 @@ urlpatterns = [
     
     # Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/articles/', views.dashboard_articles, name='dashboard_articles'),
     
     # Article CRUD - Pindahkan create sebelum detail
     path('article/create/', views.article_create, name='article_create'),

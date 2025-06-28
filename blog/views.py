@@ -161,6 +161,45 @@ def dashboard(request):
     }
     return render(request, 'blog/dashboard.html', context)
 
+@login_required
+@user_passes_test(is_admin_or_author)
+def dashboard_articles(request):
+    """Halaman kelola artikel untuk dashboard"""
+    # Filter artikel berdasarkan user (admin bisa lihat semua, author hanya artikelnya sendiri)
+    if request.user.is_staff:
+        articles = Article.objects.all()
+    else:
+        articles = Article.objects.filter(author=request.user)
+    
+    # Filter berdasarkan status
+    status_filter = request.GET.get('status')
+    if status_filter:
+        articles = articles.filter(status=status_filter)
+    
+    # Filter berdasarkan pencarian
+    search_query = request.GET.get('search')
+    if search_query:
+        articles = articles.filter(
+            Q(title__icontains=search_query) |
+            Q(content__icontains=search_query) |
+            Q(category__name__icontains=search_query)
+        )
+    
+    # Urutkan berdasarkan created_at terbaru
+    articles = articles.order_by('-created_at')
+    
+    # Pagination
+    paginator = Paginator(articles, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'current_status': status_filter,
+    }
+    return render(request, 'blog/dashboard_articles.html', context)
+
 # CRUD Operations untuk Article
 @login_required
 @user_passes_test(is_admin_or_author)
@@ -210,12 +249,13 @@ def article_delete(request, pk):
     # Hanya author atau admin yang bisa hapus
     if not (request.user.is_staff or article.author == request.user):
         messages.error(request, 'Anda tidak memiliki izin untuk menghapus artikel ini.')
-        return redirect('article_list')
+        return redirect('dashboard')
     
     if request.method == 'POST':
+        article_title = article.title  # Simpan judul sebelum dihapus
         article.delete()
-        messages.success(request, 'Artikel berhasil dihapus!')
-        return redirect('article_list')
+        messages.success(request, f'Artikel "{article_title}" berhasil dihapus!')
+        return redirect('dashboard')
     
     return render(request, 'blog/article_confirm_delete.html', {'article': article})
 
