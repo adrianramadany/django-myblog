@@ -1,0 +1,19 @@
+# Python & Django
+__pycache__/
+*.pyc
+*.pyo
+*.sqlite3
+
+# Virtual Environment
+venv/
+venv_myblog/
+
+# Static and Media
+/staticfiles/
+/media/
+
+# Secret env
+.env
+
+# VSCode/Cursor
+.vscode/
