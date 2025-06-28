@@ -1,259 +1,189 @@
-# Panduan Deployment MyBlog ke PythonAnywhere
+# Panduan Deployment Django ke PythonAnywhere
 
-## 📋 Persiapan
+## Langkah 1: Persiapan Project
 
-### 1. Akun PythonAnywhere
-- Daftar akun gratis di [PythonAnywhere](https://www.pythonanywhere.com)
-- Pilih plan yang sesuai (Free plan cukup untuk testing)
+### 1.1 Update requirements.txt
+Pastikan semua dependencies tercantum:
+```
+Django==5.2.3
+Pillow==11.2.1
+asgiref==3.8.1
+sqlparse==0.5.3
+django-allauth==0.60.1
+django-crispy-forms==2.1
+crispy-bootstrap5==0.7
+python-decouple==3.8
+django-ckeditor-5==0.2.18
+whitenoise==6.6.0
+gunicorn==21.2.0
+```
 
-### 2. File Project
-- Pastikan semua file project sudah siap
-- Struktur folder harus lengkap
+### 1.2 Buat file .env untuk production
+Buat file `.env` di root project:
+```
+DEBUG=False
+SECRET_KEY=your-secret-key-here
+ALLOWED_HOSTS=yourusername.pythonanywhere.com
+DATABASE_URL=sqlite:///db.sqlite3
+```
 
-## 🚀 Langkah Deployment
+### 1.3 Update settings.py untuk production
+Tambahkan konfigurasi production di settings.py
 
-### 1. Upload Files
-1. Login ke PythonAnywhere
-2. Buka **Files** tab
-3. Buat folder baru: `myblog`
-4. Upload semua file project ke folder tersebut
-5. Pastikan struktur folder seperti ini:
-   ```
-   myblog/
-   ├── blog/
-   ├── myblog/
-   ├── templates/
-   ├── static/
-   ├── media/
-   ├── manage.py
-   ├── requirements.txt
-   └── README.md
-   ```
+## Langkah 2: Daftar PythonAnywhere
 
-### 2. Setup Virtual Environment
-1. Buka **Consoles** tab
-2. Pilih **Bash** console
-3. Navigasi ke folder project:
-   ```bash
-   cd myblog
-   ```
-4. Buat virtual environment:
-   ```bash
-   mkvirtualenv --python=/usr/bin/python3.9 myblog
-   ```
-5. Aktifkan virtual environment:
-   ```bash
-   workon myblog
-   ```
-6. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+1. Kunjungi [www.pythonanywhere.com](https://www.pythonanywhere.com)
+2. Daftar akun gratis (Beginner plan)
+3. Verifikasi email
 
-### 3. Database Setup
-1. Dalam virtual environment, jalankan:
-   ```bash
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
+## Langkah 3: Upload Project
+
+### 3.1 Upload via Git (Recommended)
+```bash
+# Di local computer
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/username/myblog.git
+git push -u origin main
+```
+
+### 3.2 Upload via Files
+1. Buka Files tab di PythonAnywhere
+2. Upload semua file project ke folder `/home/yourusername/`
+
+## Langkah 4: Setup Virtual Environment
+
+1. Buka Bash console di PythonAnywhere
+2. Buat virtual environment:
+```bash
+cd /home/yourusername/
+python3.11 -m venv myblog_env
+source myblog_env/bin/activate
+```
+
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Langkah 5: Setup Database
+
+1. Jalankan migrations:
+```bash
+python manage.py migrate
+```
+
 2. Buat superuser:
-   ```bash
-   python manage.py createsuperuser
-   ```
+```bash
+python manage.py createsuperuser
+```
 
-### 4. Static Files
-1. Jalankan collectstatic:
-   ```bash
-   python manage.py collectstatic
-   ```
+3. Collect static files:
+```bash
+python manage.py collectstatic
+```
 
-### 5. Configure Web App
-1. Buka **Web** tab
-2. Klik **Add a new web app**
-3. Pilih **Manual configuration**
-4. Pilih **Python 3.9**
-5. Set **Source code** ke: `/home/username/myblog`
-6. Set **Working directory** ke: `/home/username/myblog`
+## Langkah 6: Setup Web App
 
-### 6. Configure WSGI File
-1. Klik **WSGI configuration file**
-2. Edit file dan ganti dengan kode berikut:
+1. Buka Web tab di PythonAnywhere
+2. Klik "Add a new web app"
+3. Pilih "Manual configuration"
+4. Pilih Python 3.11
+
+### 6.1 Configure WSGI file
+Edit file `/var/www/yourusername_pythonanywhere_com_wsgi.py`:
 
 ```python
 import os
 import sys
 
 # Add your project directory to the sys.path
-path = '/home/username/myblog'
+path = '/home/yourusername/myblog'
 if path not in sys.path:
     sys.path.append(path)
 
 # Set environment variables
 os.environ['DJANGO_SETTINGS_MODULE'] = 'myblog.settings'
 
-# Activate virtual environment
-activate_this = '/home/username/.virtualenvs/myblog/bin/activate_this.py'
-with open(activate_this) as file_:
-    exec(file_.read(), dict(__file__=activate_this))
-
-# Import Django application
+# Serve Django application
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 ```
 
-**Catatan**: Ganti `username` dengan username PythonAnywhere Anda.
+### 6.2 Configure Virtual Environment
+Di Web tab, set:
+- **Source code**: `/home/yourusername/myblog`
+- **Working directory**: `/home/yourusername/myblog`
+- **WSGI configuration file**: `/var/www/yourusername_pythonanywhere_com_wsgi.py`
 
-### 7. Configure Settings
-1. Edit file `myblog/settings.py`
-2. Ubah konfigurasi untuk production:
+## Langkah 7: Setup Static Files
 
-```python
-# Production settings
-DEBUG = False
-ALLOWED_HOSTS = ['username.pythonanywhere.com']
+1. Di Web tab, scroll ke "Static files"
+2. Add static files:
+   - URL: `/static/`
+   - Directory: `/home/yourusername/myblog/staticfiles`
 
-# Static files
-STATIC_ROOT = '/home/username/myblog/staticfiles'
-STATIC_URL = '/static/'
+3. Add media files:
+   - URL: `/media/`
+   - Directory: `/home/yourusername/myblog/media`
 
-# Media files
-MEDIA_ROOT = '/home/username/myblog/media'
-MEDIA_URL = '/media/'
+## Langkah 8: Setup Environment Variables
 
-# Security
-SECRET_KEY = 'your-secret-key-here'
-```
+1. Di Web tab, scroll ke "Environment variables"
+2. Add:
+   - `DEBUG`: `False`
+   - `SECRET_KEY`: `your-secret-key`
+   - `ALLOWED_HOSTS`: `yourusername.pythonanywhere.com`
 
-### 8. Configure URLs
-1. Edit file `myblog/urls.py`
-2. Tambahkan konfigurasi untuk static dan media files:
+## Langkah 9: Reload Web App
 
-```python
-from django.conf import settings
-from django.conf.urls.static import static
+1. Klik "Reload" di Web tab
+2. Tunggu beberapa menit
+3. Akses website di: `https://yourusername.pythonanywhere.com`
 
-urlpatterns = [
-    # ... existing patterns ...
-]
+## Langkah 10: Setup Google OAuth (Optional)
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-```
+1. Update Google OAuth settings di Google Cloud Console
+2. Tambahkan domain PythonAnywhere ke authorized domains
+3. Update SocialApp di Django admin
 
-### 9. Reload Web App
-1. Kembali ke **Web** tab
-2. Klik **Reload** button
-3. Tunggu beberapa saat sampai reload selesai
+## Troubleshooting
 
-## 🔧 Troubleshooting
+### Error 500
+1. Cek error logs di Web tab
+2. Pastikan semua dependencies terinstall
+3. Cek file permissions
 
-### Error: ModuleNotFoundError
-- Pastikan virtual environment aktif
-- Check path di WSGI file
-- Restart web app
+### Static files tidak muncul
+1. Jalankan `python manage.py collectstatic`
+2. Cek konfigurasi static files di Web tab
+3. Reload web app
 
-### Error: Static files not found
-- Jalankan `python manage.py collectstatic`
-- Check STATIC_ROOT path
-- Reload web app
+### Database error
+1. Jalankan `python manage.py migrate`
+2. Cek database permissions
+3. Pastikan SQLite file ada
 
-### Error: Database errors
-- Check database settings
-- Run migrations: `python manage.py migrate`
-- Check file permissions
+## Tips
 
-### Error: Media files not uploading
-- Check MEDIA_ROOT path
-- Ensure directory exists and writable
-- Check file permissions
+1. **Gunakan Git** untuk version control
+2. **Backup database** secara berkala
+3. **Monitor error logs** di Web tab
+4. **Test locally** sebelum deploy
+5. **Gunakan environment variables** untuk sensitive data
 
-## 📊 Monitoring
+## Upgrade ke Paid Plan (Optional)
 
-### Logs
-- Check **Web** tab untuk error logs
-- Monitor **Files** untuk disk usage
-- Check **Tasks** untuk background jobs
+Untuk fitur lebih:
+- Custom domain
+- HTTPS
+- More storage
+- Better performance
+- Database MySQL/PostgreSQL
 
-### Performance
-- Monitor CPU usage
-- Check memory usage
-- Optimize database queries
+## Support
 
-## 🔒 Security
-
-### Production Checklist
-- [ ] DEBUG = False
-- [ ] Secret key changed
-- [ ] Allowed hosts configured
-- [ ] HTTPS enabled (paid plan)
-- [ ] Database secured
-- [ ] Static files served properly
-
-### Backup
-- Regular database backups
-- File system backups
-- Code version control
-
-## 🌐 Domain Configuration
-
-### Custom Domain (Paid Plan)
-1. Add custom domain in **Web** tab
-2. Configure DNS settings
-3. Update ALLOWED_HOSTS
-4. Reload web app
-
-### SSL Certificate
-1. Enable HTTPS in **Web** tab
-2. Configure SSL certificate
-3. Update settings for HTTPS
-
-## 📈 Scaling
-
-### Performance Optimization
-- Enable caching
-- Optimize database queries
-- Use CDN for static files
-- Enable compression
-
-### Monitoring Tools
-- PythonAnywhere analytics
-- Django debug toolbar (development)
-- Database query monitoring
-
-## 🎯 Final Steps
-
-1. **Test all features**:
-   - User registration/login
-   - Article CRUD
-   - Admin panel
-   - File uploads
-   - Search functionality
-
-2. **SEO Optimization**:
-   - Meta tags
-   - Sitemap
-   - Robots.txt
-   - Schema markup
-
-3. **Documentation**:
-   - Update README.md
-   - Create user guide
-   - Document API (if any)
-
-4. **Backup**:
-   - Database backup
-   - File system backup
-   - Configuration backup
-
-## 📞 Support
-
-Jika mengalami masalah:
-1. Check PythonAnywhere documentation
-2. Review Django deployment guide
-3. Check error logs
-4. Contact PythonAnywhere support
-
----
-
-**MyBlog** - Successfully deployed on PythonAnywhere! 🚀 
+- PythonAnywhere Help: https://help.pythonanywhere.com/
+- Django Deployment: https://docs.djangoproject.com/en/5.2/howto/deployment/
+- Community Forum: https://www.pythonanywhere.com/forums/ 

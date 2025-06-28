@@ -50,7 +50,7 @@
                                     </div>
                                     {% endif %}
                                     <div class="form-text">
-                                        <i class="fas fa-info-circle me-1"></i>Gunakan format Markdown untuk styling
+                                        <i class="fas fa-info-circle me-1"></i>Gunakan editor di atas untuk formatting teks, gambar, dan styling
                                     </div>
                                 </div>
 
@@ -187,6 +187,32 @@
     
     .card-header {
         border-radius: 15px 15px 0 0 !important;
+    }
+    
+    /* CKEditor Styling */
+    .django-ckeditor-5 {
+        width: 100% !important;
+    }
+    
+    .django-ckeditor-5 .django-ckeditor-5-editor {
+        border-radius: 10px !important;
+        border: 2px solid #e0e0e0 !important;
+        transition: border-color 0.3s ease !important;
+    }
+    
+    .django-ckeditor-5 .django-ckeditor-5-editor:focus-within {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 0.2rem rgba(156, 39, 176, 0.25) !important;
+    }
+    
+    .django-ckeditor-5 .django-ckeditor-5-toolbar {
+        border-radius: 10px 10px 0 0 !important;
+        border-bottom: 1px solid #e0e0e0 !important;
+    }
+    
+    .django-ckeditor-5 .django-ckeditor-5-content {
+        border-radius: 0 0 10px 10px !important;
+        min-height: 400px !important;
     }
 </style>
 {% endblock %} 

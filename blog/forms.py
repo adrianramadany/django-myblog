@@ -1,8 +1,14 @@
 from django import forms
 from django.contrib.auth.models import User
+from django_ckeditor_5.widgets import CKEditor5Widget
 from .models import Article, Category, Gallery, UserProfile
 
 class ArticleForm(forms.ModelForm):
+    content = forms.CharField(
+        widget=CKEditor5Widget(config_name='extends'),
+        label='Konten Artikel'
+    )
+    
     class Meta:
         model = Article
         fields = ['title', 'content', 'excerpt', 'image', 'category', 'status']
@@ -10,11 +16,6 @@ class ArticleForm(forms.ModelForm):
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Judul artikel...'
-            }),
-            'content': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 10,
-                'placeholder': 'Isi artikel...'
             }),
             'excerpt': forms.Textarea(attrs={
                 'class': 'form-control',
