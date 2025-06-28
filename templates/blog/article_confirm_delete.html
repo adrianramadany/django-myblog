@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Hapus Artikel - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-trash me-2"></i>Konfirmasi Hapus
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-exclamation-triangle text-warning" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">Hapus Artikel</h3>
+                        <p class="text-muted">Apakah Anda yakin ingin menghapus artikel ini?</p>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <h5 class="alert-heading">{{ article.title }}</h5>
+                        <p class="mb-0">
+                            <strong>Penulis:</strong> {{ article.author.username }}<br>
+                            <strong>Kategori:</strong> {{ article.category.name }}<br>
+                            <strong>Status:</strong> {{ article.get_status_display }}<br>
+                            <strong>Views:</strong> {{ article.views }}
+                        </p>
+                    </div>
+
+                    <div class="alert alert-danger">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Peringatan:</strong> Tindakan ini tidak dapat dibatalkan. Artikel akan dihapus secara permanen.
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'article_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Batal
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-2"></i>Hapus Artikel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

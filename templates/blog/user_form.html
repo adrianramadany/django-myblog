@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit User - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-edit me-2"></i>Edit User: {{ user.get_full_name|default:user.username }}
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- User Info -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-info-circle me-2"></i>Informasi User</h6>
+                                <p class="mb-1"><strong>Username:</strong> {{ user.username }}</p>
+                                <p class="mb-1"><strong>Email:</strong> {{ user.email }}</p>
+                                <p class="mb-1"><strong>Nama:</strong> {{ user.get_full_name|default:"Tidak diisi" }}</p>
+                                <p class="mb-0"><strong>Bergabung:</strong> {{ user.date_joined|date:"d M Y" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-chart-bar me-2"></i>Statistik</h6>
+                                <p class="mb-1"><strong>Artikel:</strong> {{ user.articles.count }} artikel</p>
+                                <p class="mb-1"><strong>Login terakhir:</strong> {{ user.last_login|date:"d M Y"|default:"Belum pernah" }}</p>
+                                <p class="mb-0"><strong>Status:</strong> 
+                                    {% if user.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactive</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Admin Status -->
+                        <div class="mb-4">
+                            <h6><i class="fas fa-shield-alt me-2"></i>Admin Status</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="is_staff" id="is_staff" 
+                                       {% if user.is_staff %}checked{% endif %}>
+                                <label class="form-check-label" for="is_staff">
+                                    <strong>Admin Access</strong>
+                                    <small class="text-muted d-block">User dapat mengakses admin panel dan semua fitur</small>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- User Groups -->
+                        <div class="mb-4">
+                            <h6><i class="fas fa-users me-2"></i>User Groups</h6>
+                            <p class="text-muted mb-3">Pilih group untuk user ini:</p>
+                            
+                            {% for group in groups %}
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="groups" 
+                                       value="{{ group.id }}" id="group_{{ group.id }}"
+                                       {% if group in user.groups.all %}checked{% endif %}>
+                                <label class="form-check-label" for="group_{{ group.id }}">
+                                    <strong>{{ group.name }}</strong>
+                                    <small class="text-muted d-block">
+                                        {% if group.name == 'Admin' %}
+                                            Akses penuh ke semua fitur dan user management
+                                        {% elif group.name == 'Author' %}
+                                            Dapat membuat, edit, dan hapus artikel
+                                        {% else %}
+                                            {{ group.name }} permissions
+                                        {% endif %}
+                                    </small>
+                                </label>
+                            </div>
+                            {% empty %}
+                            <p class="text-muted">Tidak ada group yang tersedia</p>
+                            {% endfor %}
+                        </div>
+
+                        <!-- User Articles Preview -->
+                        {% if user.articles.exists %}
+                        <div class="mb-4">
+                            <h6><i class="fas fa-newspaper me-2"></i>Artikel User</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Judul</th>
+                                            <th>Status</th>
+                                            <th>Views</th>
+                                            <th>Tanggal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for article in user.articles.all|slice:":5" %}
+                                        <tr>
+                                            <td>{{ article.title|truncatewords:5 }}</td>
+                                            <td>
+                                                <span class="badge {% if article.status == 'published' %}bg-success{% else %}bg-warning{% endif %}">
+                                                    {{ article.get_status_display }}
+                                                </span>
+                                            </td>
+                                            <td>{{ article.views }}</td>
+                                            <td>{{ article.created_at|date:"d M Y" }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% if user.articles.count > 5 %}
+                            <small class="text-muted">Menampilkan 5 dari {{ user.articles.count }} artikel</small>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Kembali
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tentang Saya - MyBlog{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    Tentang Saya
+                </h1>
+                <p class="lead mb-4">
+                    Selamat datang di halaman profil saya. Saya adalah seorang pengembang web yang passionate 
+                    dalam menciptakan solusi digital yang inovatif dan user-friendly.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="#contact" class="btn btn-light btn-lg">
+                        <i class="fas fa-envelope me-2"></i>Hubungi Saya
+                    </a>
+                    <a href="#portfolio" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-briefcase me-2"></i>Portfolio
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="position-relative">
+                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center" 
+                         style="width: 300px; height: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden;">
+                        <!-- Ganti path foto sesuai dengan nama file foto Anda -->
+                        <img src="{% static 'images/profile-photo.jpg' %}" alt="Foto Profil Adrian Ramadany" 
+                             style="width: 100%; height: 100%; object-fit: cover;"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <i class="fas fa-user-circle text-primary" style="font-size: 8rem; display: none;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-body p-5">
+                        <h2 class="text-center mb-4">
+                            <i class="fas fa-user me-2"></i>Profil Saya
+                        </h2>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-graduation-cap me-2"></i>Pendidikan</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <strong>Sarjana Teknik Informatika</strong><br>
+                                        <small class="text-muted">Universitas Muhammadiyah Kalimantan Timur, 2023-2025</small>
+                                    </li>
+                                    <li class="mb-2">
+                                        <strong>SMA Negeri 4 Penajam Paser Utara</strong><br>
+                                        <small class="text-muted">IPS, 2021-2023</small>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-briefcase me-2"></i>Pengalaman</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <strong>Web Developer Intern</strong><br>
+                                        <small class="text-muted">Ongoing, 2023-2025</small>
+                                    </li>
+                                    <li class="mb-2">
+                                        <strong>Freelance Web Developer</strong><br>
+                                        <small class="text-muted">Ongoing, 2023-Sekarang</small>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h5><i class="fas fa-code me-2"></i>Keahlian Teknis</h5>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h6>Frontend Development</h6>
+                                <div class="mb-2">
+                                    <span class="badge bg-primary me-1">HTML5</span>
+                                    <span class="badge bg-primary me-1">CSS</span>
+                                    <span class="badge bg-primary me-1">JavaScript</span>
+                                    <span class="badge bg-primary me-1">React.js</span>
+                                    <span class="badge bg-primary me-1">Bootstrap</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Backend Development</h6>
+                                <div class="mb-2">
+                                    <span class="badge bg-success me-1">Python</span>
+                                    <span class="badge bg-success me-1">Django</span>
+                                    <span class="badge bg-success me-1">PHP</span>
+                                    <span class="badge bg-success me-1">MySQL</span>
+                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5><i class="fas fa-tools me-2"></i>Tools & Technologies</h5>
+                        <div class="mb-4">
+                            <span class="badge bg-info me-1">Git</span>
+                            <span class="badge bg-info me-1">Docker</span>
+                            <span class="badge bg-info me-1">AWS</span>
+                            <span class="badge bg-info me-1">Linux</span>
+                            <span class="badge bg-info me-1">VS Code</span>
+                            <span class="badge bg-info me-1">Figma</span>
+                        </div>
+
+                        <h5><i class="fas fa-language me-2"></i>Bahasa</h5>
+                        <div class="mb-4">
+                            <span class="badge bg-warning me-1">Bahasa Indonesia (Native)</span>
+                            <span class="badge bg-warning me-1">English (Fluent)</span>
+                            <span class="badge bg-warning me-1">Javanese (Fluent)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section class="py-5 bg-light" id="portfolio">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center mb-3">
+                    <i class="fas fa-briefcase me-2"></i>Portfolio Proyek
+                </h2>
+                <p class="text-center text-muted">Beberapa proyek yang telah saya kerjakan</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-shopping-cart me-2"></i>E-Commerce Platform
+                        </h5>
+                        <p class="card-text">
+                            Platform e-commerce lengkap dengan sistem pembayaran, manajemen produk, 
+                            dan dashboard admin menggunakan Django dan React.js.
+                        </p>
+                        <div class="mb-3">
+                            <span class="badge bg-primary me-1">Django</span>
+                            <span class="badge bg-primary me-1">React</span>
+                            <span class="badge bg-primary me-1">PostgreSQL</span>
+                        </div>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fas fa-external-link-alt me-1"></i>Lihat Proyek
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-mobile-alt me-2"></i>Mobile App
+                        </h5>
+                        <p class="card-text">
+                            Aplikasi mobile untuk manajemen tugas dan proyek dengan fitur real-time 
+                            collaboration dan notifikasi push.
+                        </p>
+                        <div class="mb-3">
+                            <span class="badge bg-success me-1">React Native</span>
+                            <span class="badge bg-success me-1">Node.js</span>
+                            <span class="badge bg-success me-1">MongoDB</span>
+                        </div>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fas fa-external-link-alt me-1"></i>Lihat Proyek
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-line me-2"></i>Analytics Dashboard
+                        </h5>
+                        <p class="card-text">
+                            Dashboard analitik untuk monitoring performa bisnis dengan visualisasi 
+                            data interaktif dan laporan real-time.
+                        </p>
+                        <div class="mb-3">
+                            <span class="badge bg-info me-1">Python</span>
+                            <span class="badge bg-info me-1">Django</span>
+                            <span class="badge bg-info me-1">Chart.js</span>
+                        </div>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fas fa-external-link-alt me-1"></i>Lihat Proyek
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-5" id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-body p-5">
+                        <h2 class="text-center mb-4">
+                            <i class="fas fa-envelope me-2"></i>Hubungi Saya
+                        </h2>
+                        
+                        <div class="row text-center">
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3">
+                                    <i class="fas fa-envelope text-primary mb-3" style="font-size: 2rem;"></i>
+                                    <h5>Email</h5>
+                                    <p class="text-muted">adrianramadany739@gmail.com</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3">
+                                    <i class="fas fa-phone text-primary mb-3" style="font-size: 2rem;"></i>
+                                    <h5>Telepon</h5>
+                                    <p class="text-muted">+62 811-2233-4455</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3">
+                                    <i class="fas fa-map-marker-alt text-primary mb-3" style="font-size: 2rem;"></i>
+                                    <h5>Lokasi</h5>
+                                    <p class="text-muted">Samarinda, Indonesia</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="text-center">
+                            <h5 class="mb-3">Ikuti Saya di Media Sosial</h5>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="#" class="btn btn-outline-primary">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-primary">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-primary">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-primary">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

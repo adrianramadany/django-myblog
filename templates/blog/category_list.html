@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Kategori - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>
+                    <i class="fas fa-tags me-2"></i>Daftar Kategori
+                </h1>
+                <a href="{% url 'category_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Tambah Kategori
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="card-title mb-0">{{ category.name }}</h5>
+                        <span class="badge bg-primary">{{ category.article_count }} Artikel</span>
+                    </div>
+                    <p class="card-text text-muted">{{ category.description|default:"Tidak ada deskripsi" }}</p>
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar me-1"></i>Dibuat: {{ category.created_at|date:"d M Y" }}
+                        </small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'category_update' category.pk %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </a>
+                        <a href="{% url 'category_delete' category.pk %}" class="btn btn-outline-danger btn-sm">
+                            <i class="fas fa-trash me-1"></i>Hapus
+                        </a>
+                        <a href="{{ category.get_absolute_url }}" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-eye me-1"></i>Lihat
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-tags text-muted" style="font-size: 4rem;"></i>
+                <h4 class="mt-3 text-muted">Belum ada kategori</h4>
+                <p class="text-muted">Mulai dengan membuat kategori pertama Anda</p>
+                <a href="{% url 'category_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Buat Kategori
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

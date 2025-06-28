@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="sidebar">
+                <h5 class="mb-3">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </h5>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="{% url 'dashboard' %}">
+                        <i class="fas fa-home me-2"></i>Beranda
+                    </a>
+                    <a class="nav-link" href="{% url 'article_list' %}">
+                        <i class="fas fa-newspaper me-2"></i>Artikel
+                    </a>
+                    <a class="nav-link" href="{% url 'article_create' %}">
+                        <i class="fas fa-plus me-2"></i>Buat Artikel
+                    </a>
+                    <a class="nav-link" href="{% url 'category_list' %}">
+                        <i class="fas fa-tags me-2"></i>Kategori
+                    </a>
+                    <a class="nav-link" href="{% url 'gallery_list' %}">
+                        <i class="fas fa-images me-2"></i>Galeri
+                    </a>
+                    {% if user.is_staff %}
+                    <a class="nav-link" href="{% url 'user_list' %}">
+                        <i class="fas fa-users me-2"></i>Users
+                    </a>
+                    {% endif %}
+                    <a class="nav-link" href="{% url 'profile_update' %}">
+                        <i class="fas fa-user-edit me-2"></i>Edit Profil
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9 col-md-8">
+            <!-- Welcome Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <i class="fas fa-user-circle me-2"></i>Selamat Datang, {{ user.get_full_name|default:user.username }}!
+                            </h4>
+                            <p class="card-text text-muted">
+                                Kelola konten blog Anda dari dashboard ini. Anda dapat membuat, mengedit, dan mengelola artikel, kategori, dan galeri.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6 mb-3">
+                    <div class="dashboard-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3>{{ total_articles }}</h3>
+                                <p class="mb-0">Total Artikel</p>
+                            </div>
+                            <i class="fas fa-newspaper" style="font-size: 3rem; opacity: 0.7;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3">
+                    <div class="dashboard-card" style="background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3>{{ published_articles }}</h3>
+                                <p class="mb-0">Artikel Dipublikasi</p>
+                            </div>
+                            <i class="fas fa-check-circle" style="font-size: 3rem; opacity: 0.7;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3">
+                    <div class="dashboard-card" style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3>{{ draft_articles }}</h3>
+                                <p class="mb-0">Artikel Draft</p>
+                            </div>
+                            <i class="fas fa-edit" style="font-size: 3rem; opacity: 0.7;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3">
+                    <div class="dashboard-card" style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3>{{ total_categories }}</h3>
+                                <p class="mb-0">Kategori</p>
+                            </div>
+                            <i class="fas fa-tags" style="font-size: 3rem; opacity: 0.7;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row mb-4">
+                <div class="col-lg-8 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-bar me-2"></i>Statistik Artikel per Kategori
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="categoryChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-users me-2"></i>Top Authors
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% for user_stat in user_stats %}
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h6 class="mb-0">{{ user_stat.username }}</h6>
+                                    <small class="text-muted">{{ user_stat.article_count }} artikel</small>
+                                </div>
+                                <div class="avatar">
+                                    <i class="fas fa-user-circle text-primary" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p class="text-muted text-center">Belum ada data</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Articles -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-clock me-2"></i>Artikel Terbaru
+                            </h5>
+                            <a href="{% url 'article_create' %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus me-1"></i>Buat Artikel
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            {% for article in recent_articles %}
+                            <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                                <div class="flex-shrink-0 me-3">
+                                    {% if article.image %}
+                                        <img src="{{ article.image.url }}" alt="{{ article.title }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 10px;">
+                                    {% else %}
+                                        <div class="bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 10px;">
+                                            <i class="fas fa-image text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{{ article.title }}</h6>
+                                    <small class="text-muted">
+                                        <i class="fas fa-user me-1"></i>{{ article.author.username }} |
+                                        <i class="fas fa-calendar me-1"></i>{{ article.created_at|date:"d M Y" }} |
+                                        <i class="fas fa-eye me-1"></i>{{ article.views }} views |
+                                        <span class="badge {% if article.status == 'published' %}bg-success{% else %}bg-warning{% endif %}">
+                                            {{ article.get_status_display }}
+                                        </span>
+                                    </small>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <a href="{% url 'article_update' article.pk %}" class="btn btn-outline-primary btn-sm me-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{{ article.get_absolute_url }}" class="btn btn-outline-info btn-sm">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-newspaper text-muted" style="font-size: 3rem;"></i>
+                                <p class="text-muted mt-2">Belum ada artikel. Mulai menulis artikel pertama Anda!</p>
+                                <a href="{% url 'article_create' %}" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Buat Artikel
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Chart.js configuration
+const chartData = {{ chart_data|safe }};
+
+const ctx = document.getElementById('categoryChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: chartData.categories,
+        datasets: [{
+            label: 'Jumlah Artikel',
+            data: chartData.article_counts,
+            backgroundColor: [
+                'rgba(156, 39, 176, 0.8)',
+                'rgba(33, 150, 243, 0.8)',
+                'rgba(76, 175, 80, 0.8)',
+                'rgba(255, 152, 0, 0.8)',
+                'rgba(244, 67, 54, 0.8)'
+            ],
+            borderColor: [
+                'rgba(156, 39, 176, 1)',
+                'rgba(33, 150, 243, 1)',
+                'rgba(76, 175, 80, 1)',
+                'rgba(255, 152, 0, 1)',
+                'rgba(244, 67, 54, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+</script>
+{% endblock %} 

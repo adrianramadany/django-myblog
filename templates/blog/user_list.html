@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}User Management - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1>
+                <i class="fas fa-users me-2"></i>User Management
+            </h1>
+            <p class="text-muted">Kelola user dan role dalam sistem</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for user in users %}
+        <div class="col-lg-6 col-md-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="fas fa-user-circle text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1">{{ user.get_full_name|default:user.username }}</h5>
+                            <p class="text-muted mb-0">{{ user.email }}</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <a href="{% url 'user_update' user.pk %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-1"></i>Bergabung: {{ user.date_joined|date:"d M Y" }}
+                            </small>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>Login terakhir: {{ user.last_login|date:"d M Y"|default:"Belum pernah" }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Status:</strong>
+                        {% if user.is_staff %}
+                            <span class="badge bg-success">Admin</span>
+                        {% else %}
+                            <span class="badge bg-secondary">User</span>
+                        {% endif %}
+                        
+                        {% if user.is_active %}
+                            <span class="badge bg-primary">Active</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactive</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Groups:</strong>
+                        {% for group in user.groups.all %}
+                            <span class="badge bg-info me-1">{{ group.name }}</span>
+                        {% empty %}
+                            <span class="text-muted">Tidak ada group</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Artikel:</strong>
+                        <span class="badge bg-warning">{{ user.articles.count }} artikel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-users text-muted" style="font-size: 4rem;"></i>
+                <h4 class="mt-3 text-muted">Tidak ada user</h4>
+                <p class="text-muted">Belum ada user yang terdaftar dalam sistem</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,8 @@
+Django==5.2.3
+Pillow==11.2.1
+asgiref==3.8.1
+sqlparse==0.5.3
+django-allauth==0.60.1
+django-crispy-forms==2.1
+crispy-bootstrap5==0.7
+python-decouple==3.8 
